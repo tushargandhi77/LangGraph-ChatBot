@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, START, END
 from typing import TypedDict, Annotated
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import BaseMessage,HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph.message import add_messages
@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = ChatGoogleGenerativeAI(model='gemini-2.0-flash')
+llm = ChatGoogleGenerativeAI(model='gemini-2.0-flash') 
 
 class ChatState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
@@ -27,3 +27,16 @@ graph.add_edge(START, "chat_node")
 graph.add_edge("chat_node", END)
 
 chatbot = graph.compile(checkpointer=checkpointer)
+
+
+
+# streaming in LangGraph
+# CONFIG = {'configurable':{'thread_id':'1'}}
+# for message_chunk,metadata in  chatbot.stream(
+#     {'messages':[HumanMessage(content="What is the recipe to make pasta")]}, 
+#     config=CONFIG,
+#     stream_mode = 'messages'
+# ):
+#     if message_chunk.content:
+#         print(message_chunk.content, end = " ",flush=True)
+
