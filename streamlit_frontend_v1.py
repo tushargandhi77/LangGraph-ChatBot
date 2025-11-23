@@ -1,5 +1,5 @@
 import streamlit as st
-from langgraph_backend import chatbot
+from langgraph_backend_v1 import chatbot
 from langchain_core.messages import HumanMessage
 
 
@@ -24,11 +24,8 @@ if user_input:
         st.text(user_input)
     
     
-    with st.chat_message("assistant"):
-        
-        ai_message = st.write_stream(
-            message_chunk.content for message_chunk,metadata in chatbot.stream(
-                {'messages':[HumanMessage(content=user_input)]},config = CONFIG,stream_mode="messages"
-            )
-        )
+    response = chatbot.invoke({'messages':[HumanMessage(content=user_input)]},config = CONFIG)
+    ai_message = response['messages'][-1].content
     st.session_state['message_history'].append({'role':'assistant', 'content': ai_message})
+    with st.chat_message("assistant"):
+        st.text(ai_message)
