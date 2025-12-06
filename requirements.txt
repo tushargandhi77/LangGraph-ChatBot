@@ -4,3 +4,6 @@ langchain-google-genai
 streamlit
 dotenv
 langgraph-checkpoint-sqlite
+faiss-cpu
+langchain-mcp-adapters
+pypdf
